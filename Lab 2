@@ -1,1 +1,61 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+bool Identifier(char c) {
+    return isalpha(c) || isdigit(c) || c == '_';
+}
+
+bool Operator(char c) {
+    return c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>' || c == '!' || c == '&' || c == '|';
+}
+
+bool Number(char c) {
+    return isdigit(c);
+}
+
+int main() {
+    string fileName;
+    cout << "Enter the filename: ";
+    cin >> fileName;
+
+    ifstream file(fileName);
+    if (!file.is_open()) {
+        cout << "Error opening file: " << fileName << endl;
+        return 1;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        string currentNumber;
+        for (char c : line) {
+            if (Number(c)) {
+                currentNumber += c;
+            } else {
+                if (!currentNumber.empty()) {
+                    cout << "Number: " << currentNumber << endl;
+                    currentNumber.clear();
+                }
+
+                if (Identifier(c)) {
+                    cout << "Identifier: " << c << endl;
+                } else if (Operator(c)) {
+                    cout << "Operator: " << c << endl;
+                } else {
+                    cout << "Other character: " << c << endl;
+                }
+            }
+        }
+
+        if (!currentNumber.empty()) {
+            cout << "Number: " << currentNumber << endl;
+        }
+    }
+
+    file.close();
+
+    return 0;
+}
 
